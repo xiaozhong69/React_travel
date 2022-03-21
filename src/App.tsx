@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import styles from "./App.module.css";
+import {Row,Col} from 'antd';
+import {Header,Footer,SideMenu,Carousel} from './components';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div className={styles.App}>
+			<Header/>
+				{/* 页面内容 */}
+				<div className={styles["page-content"]}>
+					<Row style={{marginTop:20}}>
+						<Col span={6}>
+							<SideMenu/>
+						</Col>
+						<Col span={18}>
+							<Carousel/>
+						</Col>
+					</Row>
+				</div>
+			<Footer/>
+		</div>
+	);
 }
 
 export default App;
