@@ -28,12 +28,8 @@ export const Header: React.FC = (props) => {
 						}}
 						overlay={
 							<Menu>
-								<Menu.Item>
-									中文
-								</Menu.Item>
-								<Menu.Item>
-									English
-								</Menu.Item>
+								<Menu.Item>中文</Menu.Item>
+								<Menu.Item>nglish</Menu.Item>
 							</Menu>
 						}
 						icon={<GlobalOutlined />}
@@ -67,7 +63,7 @@ export const Header: React.FC = (props) => {
 				</div>
 			</div>
 			<Layout.Header className={styles["main-header"]}>
-				<span  onClick={()=>history.push("/")}>
+				<span onClick={() => history.push("/")}>
 					<img
 						src={logo}
 						alt=""
