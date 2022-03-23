@@ -16,9 +16,6 @@ export const ProductImageComponent: React.FC<PropsType> = ({
 	imageSrc,
 	price,
 	title,
-    history,
-    location,
-    match
 }) => {
 	return (
 		<Link to={`detail/${id}`}>
