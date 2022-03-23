@@ -8,53 +8,36 @@ import sideImage3 from '../../assets/images/sider_2019_02-04-2.png';
 import styles from './HomePage.module.css';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import axios from 'axios';
-
-interface State {
-	productList: any[],
-	loading: boolean,
-	error: null | string
-}
+import {connect} from 'react-redux';
+import {RootState} from "../../redux/store";
+import {fetchRecommendProductStartActionCreator,fetchRecommendProductSuccessActionCreator,fetchRecommendProductFailActionCreator} from "../../redux/recommendProducts/recommendProductsActions";
 
 interface CatchType {
 	message: any
 }
 
-class HomePageComponent extends Component<WithTranslation, State> {
+type PropsType = WithTranslation & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			productList: [],
-			loading: true,
-			error: null
-		}
-	}
+class HomePageComponent extends Component<PropsType> {
 
 	componentDidMount() {
+		this.props.fetchStart();
 		try {
 			axios
 				.get("https://www.fastmock.site/mock/ef752190847359716b80418509711210/api/productCollections")
 				.then(res => {
-					console.log(res.data[0].touristRoutes);
-					this.setState({
-						productList: res.data,
-						loading: false,
-						error: null
-					});
+					this.props.fetchSuccess(res.data);
 				})
 		} catch (error) {
 			const u = error as CatchType;
-			this.setState({
-				error: u.message,
-				loading: false
-			})
+			this.props.fetchFail(u.message);
 		}
 
 	}
 
 	render() {
 		const { t } = this.props;
-		const { productList, loading, error } = this.state;
+		const { productList, loading, error } = this.props;
 
 		if (loading) {
 			return <Spin
@@ -69,10 +52,10 @@ class HomePageComponent extends Component<WithTranslation, State> {
 			/>
 		}
 
-		if(error){
+		if (error) {
 			return <div>网站出错：{error}</div>
 		}
-		
+
 		return (
 			<>
 				<Header />
@@ -109,4 +92,25 @@ class HomePageComponent extends Component<WithTranslation, State> {
 	}
 }
 
-export const HomePage = withTranslation()(HomePageComponent);
+const mapStateToProps = (state:RootState)=>{
+	return {
+		productList:state.recommendProducts.productList,
+		error:state.recommendProducts.error,
+		loading:state.recommendProducts.loading
+	}
+}
+const mapDispatchToProps = (dispatch)=>{
+	return {
+		fetchStart:()=>{
+			dispatch(fetchRecommendProductStartActionCreator());
+		},
+		fetchSuccess:(data)=>{
+			dispatch(fetchRecommendProductSuccessActionCreator(data));
+		},
+		fetchFail:(error)=>{
+			dispatch(fetchRecommendProductFailActionCreator(error));
+		}
+	}
+}
+
+export const HomePage = connect(mapStateToProps,mapDispatchToProps)(withTranslation()(HomePageComponent));
