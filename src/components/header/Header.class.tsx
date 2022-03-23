@@ -4,26 +4,26 @@ import logo from "../../assets/logo.svg";
 import { Layout, Typography, Input, Menu, Button, Dropdown } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import {RootState} from "../../redux/store";
-import {withTranslation,WithTranslation} from 'react-i18next';
-import {addLanguageActionCreator,changeLanguageActionCreator} from "../../redux/language/languageAction";
-import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
+import { RootState } from "../../redux/store";
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { addLanguageActionCreator, changeLanguageActionCreator } from "../../redux/language/languageAction";
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 
 type PropsType = RouteComponentProps & WithTranslation & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class HeaderComponent extends Component<PropsType> {
 
-	menuClickHandle = (e)=>{
-		if(e.key === "new"){
-			this.props.addLanguage("新语言","new_lang");
-		}else{
+	menuClickHandle = (e) => {
+		if (e.key === "new") {
+			this.props.addLanguage("新语言", "new_lang");
+		} else {
 			this.props.changeLanguage(e.key);
 		}
 	}
 
 	render() {
-		const {history,t} = this.props;
+		const { history, t } = this.props;
 		return (
 			<div className={styles["app-header"]}>
 				<div className={styles["top-header"]}>
@@ -38,7 +38,7 @@ class HeaderComponent extends Component<PropsType> {
 							overlay={
 								<Menu onClick={this.menuClickHandle}>
 									{
-										this.props.languageList.map(lng =>{
+										this.props.languageList.map(lng => {
 											return <Menu.Item key={lng.code}>{lng.name}</Menu.Item>
 										})
 									}
@@ -54,7 +54,7 @@ class HeaderComponent extends Component<PropsType> {
 						<Button.Group
 							className={
 								styles[
-									"button-group"
+								"button-group"
 								]
 							}
 						>
@@ -88,7 +88,7 @@ class HeaderComponent extends Component<PropsType> {
 							alt=""
 							className={
 								styles[
-									"App-logo"
+								"App-logo"
 								]
 							}
 						/>
@@ -132,23 +132,23 @@ class HeaderComponent extends Component<PropsType> {
 	}
 }
 
-const mapStateToProps = (state : RootState)=>{
+const mapStateToProps = (state: RootState) => {
 	return {
-		language:state.language,
-		languageList:state.languageList
+		language: state.language,
+		languageList: state.languageList
 	}
 }
-const mapDispatchToProps = (dispatch : Dispatch)=>{
+const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-		changeLanguage: (code: "zh" | "en")=>{
+		changeLanguage: (code: "zh" | "en") => {
 			const action = changeLanguageActionCreator(code);
 			dispatch(action);
 		},
-		addLanguage: (name:string,code:string)=>{
-			const action = addLanguageActionCreator(name,code);
+		addLanguage: (name: string, code: string) => {
+			const action = addLanguageActionCreator(name, code);
 			dispatch(action);
-		} 
+		}
 	}
 }
 
-export const Header = connect(mapStateToProps,mapDispatchToProps)(withTranslation()(withRouter(HeaderComponent)));
+export const Header = connect(mapStateToProps, mapDispatchToProps)(withTranslation()(withRouter(HeaderComponent)));
