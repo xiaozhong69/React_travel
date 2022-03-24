@@ -7,32 +7,16 @@ import sideImage2 from '../../assets/images/sider_2019_02-04.png';
 import sideImage3 from '../../assets/images/sider_2019_02-04-2.png';
 import styles from './HomePage.module.css';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import axios from 'axios';
-import {connect} from 'react-redux';
-import {RootState} from "../../redux/store";
-import {fetchRecommendProductStartActionCreator,fetchRecommendProductSuccessActionCreator,fetchRecommendProductFailActionCreator} from "../../redux/recommendProducts/recommendProductsActions";
-
-interface CatchType {
-	message: any
-}
+import { connect } from 'react-redux';
+import { RootState } from "../../redux/store";
+import { giveMeDataActionCreator } from "../../redux/recommendProducts/recommendProductsActions";
 
 type PropsType = WithTranslation & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class HomePageComponent extends Component<PropsType> {
 
 	componentDidMount() {
-		this.props.fetchStart();
-		try {
-			axios
-				.get("https://www.fastmock.site/mock/ef752190847359716b80418509711210/api/productCollections")
-				.then(res => {
-					this.props.fetchSuccess(res.data);
-				})
-		} catch (error) {
-			const u = error as CatchType;
-			this.props.fetchFail(u.message);
-		}
-
+		this.props.giveMeData();
 	}
 
 	render() {
@@ -92,25 +76,19 @@ class HomePageComponent extends Component<PropsType> {
 	}
 }
 
-const mapStateToProps = (state:RootState)=>{
+const mapStateToProps = (state: RootState) => {
 	return {
-		productList:state.recommendProducts.productList,
-		error:state.recommendProducts.error,
-		loading:state.recommendProducts.loading
+		productList: state.recommendProducts.productList,
+		error: state.recommendProducts.error,
+		loading: state.recommendProducts.loading
 	}
 }
-const mapDispatchToProps = (dispatch)=>{
+const mapDispatchToProps = (dispatch) => {
 	return {
-		fetchStart:()=>{
-			dispatch(fetchRecommendProductStartActionCreator());
-		},
-		fetchSuccess:(data)=>{
-			dispatch(fetchRecommendProductSuccessActionCreator(data));
-		},
-		fetchFail:(error)=>{
-			dispatch(fetchRecommendProductFailActionCreator(error));
+		giveMeData: () => {
+			dispatch(giveMeDataActionCreator());
 		}
 	}
 }
 
-export const HomePage = connect(mapStateToProps,mapDispatchToProps)(withTranslation()(HomePageComponent));
+export const HomePage = connect(mapStateToProps, mapDispatchToProps)(withTranslation()(HomePageComponent));

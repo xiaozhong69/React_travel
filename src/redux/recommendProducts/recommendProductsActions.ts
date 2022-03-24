@@ -7,38 +7,60 @@ export const FETCH_RECOMMEND_PRODUCTS_SUCCESS = "FETCH_RECOMMEND_PRODUCTS_SUCCES
 export const FETCH_RECOMMEND_PRODUCTS_FAIL = "FETCH_RECOMMEND_PRODUCTS_FAIL"; // 推荐信息api调用失败
 
 interface FetchRecommendProductStartAction {
-	type: typeof FETCH_RECOMMEND_PRODUCTS_START;
+    type: typeof FETCH_RECOMMEND_PRODUCTS_START;
 }
 
 interface FetchRecommendProductSuccessAction {
-	type: typeof FETCH_RECOMMEND_PRODUCTS_SUCCESS;
-	payload: any;
+    type: typeof FETCH_RECOMMEND_PRODUCTS_SUCCESS;
+    payload: any;
 }
 
 interface FetchRecommendProductFailAction {
-	type: typeof FETCH_RECOMMEND_PRODUCTS_FAIL;
-	payload: any;
+    type: typeof FETCH_RECOMMEND_PRODUCTS_FAIL;
+    payload: any;
+}
+
+interface CatchType {
+	message: any
 }
 
 export type RecommendProductAction =
-	| FetchRecommendProductStartAction
-	| FetchRecommendProductSuccessAction
-	| FetchRecommendProductFailAction;
+    | FetchRecommendProductStartAction
+    | FetchRecommendProductSuccessAction
+    | FetchRecommendProductFailAction;
 
-export const fetchRecommendProductStartActionCreator = ():FetchRecommendProductStartAction=>{
+export const fetchRecommendProductStartActionCreator = (): FetchRecommendProductStartAction => {
     return {
-        type:FETCH_RECOMMEND_PRODUCTS_START
+        type: FETCH_RECOMMEND_PRODUCTS_START
     }
 }
-export const fetchRecommendProductSuccessActionCreator = (data):FetchRecommendProductSuccessAction=>{
+export const fetchRecommendProductSuccessActionCreator = (data): FetchRecommendProductSuccessAction => {
     return {
-        type:FETCH_RECOMMEND_PRODUCTS_SUCCESS,
-        payload:data
+        type: FETCH_RECOMMEND_PRODUCTS_SUCCESS,
+        payload: data
     }
 }
-export const fetchRecommendProductFailActionCreator = (error):FetchRecommendProductFailAction=>{
+export const fetchRecommendProductFailActionCreator = (error): FetchRecommendProductFailAction => {
     return {
-        type:FETCH_RECOMMEND_PRODUCTS_FAIL,
-        payload:error
+        type: FETCH_RECOMMEND_PRODUCTS_FAIL,
+        payload: error
     }
 }
+
+// thunk可以返回一个函数，而不一定是js对象
+// 在一个thunk action中可以完成一系列连续的action操作
+// 并且可以处理异步逻辑
+export const giveMeDataActionCreator = (): ThunkAction<void, RootState, unknown, RecommendProductAction> =>
+    async (dispatch,getState) => {
+        dispatch(fetchRecommendProductStartActionCreator());
+		try {
+			await axios
+				.get("https://www.fastmock.site/mock/ef752190847359716b80418509711210/api/productCollections")
+				.then(res => {
+					dispatch(fetchRecommendProductSuccessActionCreator(res.data));
+				})
+		} catch (error) {
+			const u = error as CatchType;
+			dispatch(fetchRecommendProductFailActionCreator(u.message));
+		}
+    }
