@@ -21,7 +21,7 @@ interface FetchRecommendProductFailAction {
 }
 
 interface CatchType {
-	message: any
+    message: any
 }
 
 export type RecommendProductAction =
@@ -50,17 +50,26 @@ export const fetchRecommendProductFailActionCreator = (error): FetchRecommendPro
 // thunk可以返回一个函数，而不一定是js对象
 // 在一个thunk action中可以完成一系列连续的action操作
 // 并且可以处理异步逻辑
-export const giveMeDataActionCreator = (): ThunkAction<void, RootState, unknown, RecommendProductAction> =>
-    async (dispatch,getState) => {
-        dispatch(fetchRecommendProductStartActionCreator());
-		try {
-			await axios
-				.get("https://www.fastmock.site/mock/ef752190847359716b80418509711210/api/productCollections")
-				.then(res => {
-					dispatch(fetchRecommendProductSuccessActionCreator(res.data));
-				})
-		} catch (error) {
-			const u = error as CatchType;
-			dispatch(fetchRecommendProductFailActionCreator(u.message));
-		}
+// export const giveMeDataActionCreator = (): ThunkAction<void, RootState, unknown, RecommendProductAction> =>
+//     async (dispatch, getState) => {
+//         dispatch(fetchRecommendProductStartActionCreator());
+//         try {
+//             const { data } = await axios.get("https://www.fastmock.site/mock/54f43825069a78e8a8ae8de52f4e5fce/api/productCollections");
+//             dispatch(fetchRecommendProductSuccessActionCreator(data));
+//         } catch (error) {
+//             const u = error as CatchType;
+//             dispatch(fetchRecommendProductFailActionCreator(u.message));
+//         }
+//     }
+
+export const giveMeDataActionCreator = (): ThunkAction<void, RootState, unknown, RecommendProductAction
+> => async (dispatch, getState) => {
+    dispatch(fetchRecommendProductStartActionCreator());
+    try {
+        const { data } = await axios.get("https://www.fastmock.site/mock/54f43825069a78e8a8ae8de52f4e5fce/api/productCollections");
+        dispatch(fetchRecommendProductSuccessActionCreator(data));
+    } catch (error) {
+        const u = error as CatchType;
+        dispatch(fetchRecommendProductFailActionCreator(u.message));
     }
+}
