@@ -5,6 +5,9 @@ import { Spin, Row, Col, DatePicker, Divider, Typography, Anchor, Menu } from 'a
 import styles from './DetailPage.module.css';
 import { Header, Footer, ProductIntro, ProductComments } from '../../components';
 import { commentMockData } from './mockup';
+import { productDetailSlice } from '../../redux/productDetail/slice';
+import { useSelector } from '../../redux/hooks';
+import { useDispatch } from 'react-redux';
 
 interface MatchParams {
     touristRouteId: string;
@@ -15,21 +18,25 @@ interface ErrorType {
 
 export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
     const { touristRouteId } = useParams<MatchParams>();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [product, setProduct] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null);
+    // const [loading, setLoading] = useState<boolean>(true);
+    // const [product, setProduct] = useState<any>(null);
+    // const [error, setError] = useState<string | null>(null);
+
+    const loading = useSelector(state => state.productDetail.loading);
+    const error = useSelector(state => state.productDetail.error);
+    const product = useSelector(state => state.productDetail.data);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
+            dispatch(productDetailSlice.actions.fetchStart());
             try {
                 const { data } = await axios.get(`https://www.fastmock.site/mock/ef752190847359716b80418509711210/api/touristRoutes`);
-                setProduct(data);
-                setLoading(false);
+                dispatch(productDetailSlice.actions.fetchSuccess(data));
             } catch (error) {
                 const u = error as ErrorType;
-                setError(u.message);
-                setLoading(false);
+                dispatch(productDetailSlice.actions.fetchFail(u.message));
             }
         }
         fetchData();
