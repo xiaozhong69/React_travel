@@ -5,15 +5,12 @@ import { Spin, Row, Col, DatePicker, Divider, Typography, Anchor, Menu } from 'a
 import styles from './DetailPage.module.css';
 import { Header, Footer, ProductIntro, ProductComments } from '../../components';
 import { commentMockData } from './mockup';
-import { productDetailSlice } from '../../redux/productDetail/slice';
+import { productDetailSlice,getProductDetail } from '../../redux/productDetail/slice';
 import { useSelector } from '../../redux/hooks';
 import { useDispatch } from 'react-redux';
 
 interface MatchParams {
     touristRouteId: string;
-}
-interface ErrorType {
-    message: any;
 }
 
 export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
@@ -29,17 +26,7 @@ export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchData = async () => {
-            dispatch(productDetailSlice.actions.fetchStart());
-            try {
-                const { data } = await axios.get(`https://www.fastmock.site/mock/ef752190847359716b80418509711210/api/touristRoutes`);
-                dispatch(productDetailSlice.actions.fetchSuccess(data));
-            } catch (error) {
-                const u = error as ErrorType;
-                dispatch(productDetailSlice.actions.fetchFail(u.message));
-            }
-        }
-        fetchData();
+        dispatch(getProductDetail(touristRouteId));
     }, [])
 
     if (loading) {
