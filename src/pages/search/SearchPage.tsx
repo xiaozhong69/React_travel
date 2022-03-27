@@ -1,26 +1,27 @@
 import React, { useEffect } from 'react';
 import styles from './SearchPage.module.css';
-import { Header, Footer, FilterArea, ProductList } from '../../components';
+import { FilterArea, ProductList } from '../../components';
 import { Spin } from 'antd';
 import { SearchProduct } from '../../redux/productSearch/slice';
 import { useSelector } from '../../redux/hooks';
 import { useDispatch } from 'react-redux';
+import { MainLayout } from '../../layouts';
 
-interface MatchLoaction {
-    keywords: string
-}
+// interface MatchLoaction {
+//     keywords: string
+// }
 
 export const SearchPage: React.FC = () => {
-    
-    const loading = useSelector(state=>state.productSearch.loading);
-    const error = useSelector(state=>state.productSearch.error);
-    const productList = useSelector(state=>state.productSearch.data);
+
+    const loading = useSelector(state => state.productSearch.loading);
+    const error = useSelector(state => state.productSearch.error);
+    const productList = useSelector(state => state.productSearch.data);
 
     const dispatch = useDispatch();
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(SearchProduct());
-    },[])
+    }, [])
 
     if (loading) {
         return <Spin
@@ -40,22 +41,16 @@ export const SearchPage: React.FC = () => {
     }
 
     return (
-        <>
-            <Header />
-            <div className={styles['page-content']}>
-                {/* 分类过滤器 */}
-                <div className={styles['product-list-container']}>
-                    <FilterArea />
-                </div>
-
-                {/* 产品列表 */}
-                <div className={styles['product-list-container']}>
-                    <ProductList
-                        data={productList}
-                    />
-                </div>
+        <MainLayout>
+            {/* 分类过滤器 */}
+            <div className={styles['product-list-container']}>
+                <FilterArea />
             </div>
-            <Footer />
-        </>
+
+            {/* 产品列表 */}
+            <div className={styles['product-list-container']}>
+                <ProductList data={productList} />
+            </div>
+        </MainLayout>
     )
 }
