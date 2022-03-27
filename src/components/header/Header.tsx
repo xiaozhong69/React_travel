@@ -43,66 +43,28 @@ export const Header: React.FC = () => {
 							marginLeft: 15,
 						}}
 						overlay={
-							<Menu
-								onClick={
-									menuClickHandle
-								}
-							>
-								{languageList.map(
-									(
-										lng
-									) => {
-										return (
-											<Menu.Item
-												key={
-													lng.code
-												}
-											>
-												{
-													lng.name
-												}
-											</Menu.Item>
-										);
-									}
-								)}
-								<Menu.Item
-									key={
-										"new"
-									}
-								>
-									{t(
-										"header.add_new_language"
-									)}
+							<Menu onClick={menuClickHandle}>
+								{languageList.map(lng => {
+									return (
+										<Menu.Item key={lng.code}>
+											{lng.name}
+										</Menu.Item>
+									);
+								})}
+								<Menu.Item key={"new"} >
+									{t("header.add_new_language")}
 								</Menu.Item>
 							</Menu>
 						}
 						icon={<GlobalOutlined />}
 					>
-						{language === "zh"
-							? "中文"
-							: "English"}
+						{language === "zh" ? "中文" : "English"}
 					</Dropdown.Button>
-					<Button.Group
-						className={
-							styles["button-group"]
-						}
-					>
-						<Button
-							onClick={() =>
-								history.push(
-									"register"
-								)
-							}
-						>
+					<Button.Group className={styles["button-group"]}>
+						<Button onClick={() => history.push("/register")}>
 							{t("header.register")}
 						</Button>
-						<Button
-							onClick={() =>
-								history.push(
-									"signIn"
-								)
-							}
-						>
+						<Button onClick={() => history.push("/signIn")}>
 							{t("header.signin")}
 						</Button>
 					</Button.Group>
